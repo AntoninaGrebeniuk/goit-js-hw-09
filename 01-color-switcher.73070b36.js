@@ -1,3 +1,2 @@
-//! В HTML есть кнопки «Start» и «Stop».
 const t=document.querySelector("body"),e=document.querySelector("[data-start]"),r=document.querySelector("[data-stop]");let d=null;function o(){return`#${Math.floor(16777215*Math.random()).toString(16).padStart(6,0)}`}e.addEventListener("click",(function(a){r.removeAttribute("disabled"),e.setAttribute("disabled",!0),t.style.backgroundColor=o(),d=setInterval((()=>{t.style.backgroundColor=o()}),1e3)})),r.addEventListener("click",(function(t){r.setAttribute("disabled",!0),e.removeAttribute("disabled"),clearInterval(d)})),r.setAttribute("disabled",!0);
-//# sourceMappingURL=01-color-switcher.3069759f.js.map
+//# sourceMappingURL=01-color-switcher.73070b36.js.map
