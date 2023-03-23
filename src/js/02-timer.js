@@ -1,85 +1,61 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
-//? Элементы интефрейса
-// В HTML есть готовая разметка таймера, поля выбора конечной даты и кнопки, при клике по которой
-// таймер должен запускаться.Добавь минимальное оформление элементов интерфейса.
+const input = document.querySelector('#datetime-picker');
+const startBtn = document.querySelector('[data-start]');
+const dataDays = document.querySelector('[data-days]');
+const dataHours = document.querySelector('[data-hours]');
+const dataMinutes = document.querySelector('[data-minutes]');
+const DataSeconds = document.querySelector('[data-seconds]');
 
-// <input type="text" id="datetime-picker" />
-// <button type="button" data-start>Start</button>
+startBtn.setAttribute('disabled', true);
 
-//* <div class="timer">
-//   <div class="field">
-//     <span class="value" data-days>00</span>
-//     <span class="label">Days</span>
-//   </div>
-//   <div class="field">
-//     <span class="value" data-hours>00</span>
-//     <span class="label">Hours</span>
-//   </div>
-//   <div class="field">
-//     <span class="value" data-minutes>00</span>
-//     <span class="label">Minutes</span>
-//   </div>
-//   <div class="field">
-//     <span class="value" data-seconds>00</span>
-//     <span class="label">Seconds</span>
-//   </div>
-//* </div>
-
-//! Библиотека flatpickr
-//? Используй библиотеку flatpickr для того чтобы позволить пользователю кроссбраузерно выбрать
-// конечную дату и время в одном элементе интерфейса.Для того чтобы подключить CSS код библиотеки в
-// проект, необходимо добавить еще один импорт, кроме того который описан в документации.
-
-// // Описан в документации
-// import flatpickr from "flatpickr";
-// // Дополнительный импорт стилей
-// import "flatpickr/dist/flatpickr.min.css";
-
-// Библиотека ожидает что её инициализируют на элементе input[type = "text"], поэтому мы добавили в HTML
-// документ поле input#datetime - picker.
-
-// <input type="text" id="datetime-picker" />
-
-//   Вторым аргументом функции flatpickr(selector, options) можно передать необязательный объект параметров.
-// Мы подготовили для тебя объект который нужен для выполнения задания.Разберись за что отвечает каждое
-// свойство в документации «Options» и используй его в своем коде.
-
+let startTime = null; //
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    if (selectedDates[0] <= Date.now()) {
+      Notiflix.Notify.failure('Please choose a date in the future', {
+        position: 'center-top',
+      });
+    } else {
+      startBtn.removeAttribute('disabled');
+      endTime = selectedDates[0];
+    }
   },
 };
 
-//! Выбор даты
-// Метод onClose() из обьекта параметров вызывается каждый раз при закрытии элемента интерфейса
-// который создает flatpickr.Именно в нём стоит обрабатывать дату выбранную пользователем.Параметр
-// selectedDates это массив выбранных дат, поэтому мы берем первый элемент.
+flatpickr('#datetime-picker', options);
 
-// Если пользователь выбрал дату в прошлом, покажи window.alert() с текстом
-// "Please choose a date in the future".
-// Если пользователь выбрал валидную дату (в будущем), кнопка «Start» становится активной.
-// Кнопка «Start» должа быть не активна до тех пор, пока пользователь не выбрал дату в будущем.
-// При нажатии на кнопку «Start» начинается отсчет времени до выбранной даты с момента нажатия.
+const timer = {
+  start() {
+    let intervalId = setInterval(() => {
+      const currentTime = Date.now();
+      const deltaTime = endTime - currentTime;
 
-//! Отсчет времени
-// При нажатии на кнопку «Start» скрипт должен вычислять раз в секунду сколько времени осталось до
-// указанной даты и обновлять интерфейс таймера, показывая четыре цифры: дни, часы, минуты и секунды в
-// формате xx: xx: xx: xx.
+      if (deltaTime >= 0) {
+        const time = convertMs(deltaTime);
+        updateClock(time);
+      } else {
+        clearInterval(intervalId);
+        startBtn.removeAttribute('disabled');
+      }
+    }, 1000);
+  },
+};
 
-// Количество дней может состоять из более чем двух цифр.
-// Таймер должен останавливаться когда дошел до конечной даты, то есть 00:00:00:00.
-// НЕ БУДЕМ УСЛОЖНЯТЬ
-// Если таймер запущен, для того чтобы выбрать новую дату и перезапустить его - необходимо перезагрузить
-// страницу.
+startBtn.addEventListener('click', () => {
+  timer.start();
+  startBtn.setAttribute('disabled', true);
+});
 
-// Для подсчета значений используй готовую функцию convertMs, где ms - разница между конечной и текущей
-// датой в миллисекундах.
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -89,37 +65,22 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
 
   return { days, hours, minutes, seconds };
 }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
-//! Форматирование времени
-// Функция convertMs() возвращает объект с рассчитанным оставшимся временем до конечной даты.
-// Обрати внимание, что она не форматирует результат.То есть, если осталось 4 минуты или любой другой
-// составляющей времени, то функция вернет 4, а не 04.В интерфейсе таймера необходимо добавлять 0
-// если в числе меньше двух символов.Напиши функцию addLeadingZero(value), которая использует метод
-// метод padStart() и перед отрисовкой интефрейса форматируй значение.
-
-//! Библиотека уведомлений
-//? ВНИМАНИЕ
-//! Этот функционал не обязателен при сдаче задания, но будет хорошей дополнительной практикой.
-
-//? Для отображения уведомлений пользователю вместо window.alert() используй библиотеку notiflix.
-
-const input = document.querySelector('#datetime-picker');
-const startBtn = document.querySelector('[data-start]');
-
-startBtn.setAttribute('disabled', true);
-
-flatpickr('#datetime-picker', options);
+function updateClock({ days, hours, minutes, seconds }) {
+  dataDays.textContent = `${days}`;
+  dataHours.textContent = `${hours}`;
+  dataMinutes.textContent = `${minutes}`;
+  DataSeconds.textContent = `${seconds}`;
+}

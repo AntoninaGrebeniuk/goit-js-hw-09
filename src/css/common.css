@@ -16,3 +16,29 @@ img {
   display: block;
   max-width: 100%;
 }
+
+input {
+  margin-left: 37px;
+  font-weight: 600;
+}
+
+.timer {
+  display: flex;
+  margin-top: 20px;
+  margin-left: 30px;
+  gap: 15px;
+}
+
+.field {
+  width: 50px;
+  text-align: center;
+}
+
+.value {
+  font-size: 32px;
+}
+
+.label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
