@@ -11,7 +11,8 @@ const DataSeconds = document.querySelector('[data-seconds]');
 
 startBtn.setAttribute('disabled', true);
 
-let startTime = null; //
+// let startTime = null; //
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -42,7 +43,6 @@ const timer = {
         updateClock(time);
       } else {
         clearInterval(intervalId);
-        startBtn.removeAttribute('disabled');
       }
     }, 1000);
   },
