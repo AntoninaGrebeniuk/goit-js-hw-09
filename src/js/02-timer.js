@@ -39,7 +39,7 @@ class Timer {
   start() {
     this.intervalId = setInterval(() => {
       const currentTime = Date.now();
-      let deltaTime = endTime - currentTime;
+      const deltaTime = endTime - currentTime;
 
       if (deltaTime >= 0) {
         const time = this.convertMs(deltaTime);
