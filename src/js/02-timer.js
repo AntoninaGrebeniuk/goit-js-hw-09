@@ -31,101 +31,101 @@ const options = {
 
 flatpickr('#datetime-picker', options);
 
-// class Timer {
-//   constructor({ onTick }) {
-//     this.intervalId = null;
-//     this.onTick = onTick;
-//   }
+class Timer {
+  constructor({ onTick }) {
+    this.intervalId = null;
+    this.onTick = onTick;
+  }
 
-//   start() {
-//     this.intervalId = setInterval(() => {
-//       const currentTime = Date.now();
-//       const deltaTime = endTime - currentTime;
-
-//       if (deltaTime >= 0) {
-//         const time = this.convertMs(deltaTime);
-//         this.onTick(time);
-//       } else {
-//         clearInterval(this.intervalId);
-//       }
-//     }, 1000);
-//   }
-
-//   convertMs(ms) {
-//     // Number of milliseconds per unit of time
-//     const second = 1000;
-//     const minute = second * 60;
-//     const hour = minute * 60;
-//     const day = hour * 24;
-
-//     // Remaining days
-//     const days = this.addLeadingZero(Math.floor(ms / day));
-//     // Remaining hours
-//     const hours = this.addLeadingZero(Math.floor((ms % day) / hour));
-//     // Remaining minutes
-//     const minutes = this.addLeadingZero(
-//       Math.floor(((ms % day) % hour) / minute)
-//     );
-//     // Remaining seconds
-//     const seconds = this.addLeadingZero(
-//       Math.floor((((ms % day) % hour) % minute) / second)
-//     );
-
-//     return { days, hours, minutes, seconds };
-//   }
-
-//   addLeadingZero(value) {
-//     return String(value).padStart(2, '0');
-//   }
-// }
-
-// const timer = new Timer({
-//   onTick: updateClock,
-// });
-
-// TODO ===== оставляю для себя ======
-const timer = {
   start() {
-    let intervalId = setInterval(() => {
+    this.intervalId = setInterval(() => {
       const currentTime = Date.now();
-      let deltaTime = endTime - currentTime;
+      const deltaTime = endTime - currentTime;
 
       if (deltaTime >= 0) {
-        const time = convertMs(deltaTime);
-        updateClock(time);
+        const time = this.convertMs(deltaTime);
+        this.onTick(time);
       } else {
-        clearInterval(intervalId);
+        clearInterval(this.intervalId);
       }
     }, 1000);
-  },
-};
+  }
+
+  convertMs(ms) {
+    // Number of milliseconds per unit of time
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    // Remaining days
+    const days = this.addLeadingZero(Math.floor(ms / day));
+    // Remaining hours
+    const hours = this.addLeadingZero(Math.floor((ms % day) / hour));
+    // Remaining minutes
+    const minutes = this.addLeadingZero(
+      Math.floor(((ms % day) % hour) / minute)
+    );
+    // Remaining seconds
+    const seconds = this.addLeadingZero(
+      Math.floor((((ms % day) % hour) % minute) / second)
+    );
+
+    return { days, hours, minutes, seconds };
+  }
+
+  addLeadingZero(value) {
+    return String(value).padStart(2, '0');
+  }
+}
+
+const timer = new Timer({
+  onTick: updateClock,
+});
+
+// TODO ===== оставляю для себя ======
+// const timer = {
+//   start() {
+//     let intervalId = setInterval(() => {
+//       const currentTime = Date.now();
+//       let deltaTime = endTime - currentTime;
+
+//       if (deltaTime >= 0) {
+//         const time = convertMs(deltaTime);
+//         updateClock(time);
+//       } else {
+//         clearInterval(intervalId);
+//       }
+//     }, 1000);
+//   },
+// };
 
 // ! Если в таймере одна цифра, добавляет 0 перед цифрой
 
-function addLeadingZero(value) {
-  return String(value).padStart(2, '0');
-}
+// function addLeadingZero(value) {
+//   return String(value).padStart(2, '0');
+// }
 
-function convertMs(ms) {
-  // Number of milliseconds per unit of time
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
+// function convertMs(ms) {
+//   // Number of milliseconds per unit of time
+//   const second = 1000;
+//   const minute = second * 60;
+//   const hour = minute * 60;
+//   const day = hour * 24;
 
-  // Remaining days
-  const days = addLeadingZero(Math.floor(ms / day));
-  // Remaining hours
-  const hours = addLeadingZero(Math.floor((ms % day) / hour));
-  // Remaining minutes
-  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-  // Remaining seconds
-  const seconds = addLeadingZero(
-    Math.floor((((ms % day) % hour) % minute) / second)
-  );
+//   // Remaining days
+//   const days = addLeadingZero(Math.floor(ms / day));
+//   // Remaining hours
+//   const hours = addLeadingZero(Math.floor((ms % day) / hour));
+//   // Remaining minutes
+//   const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
+//   // Remaining seconds
+//   const seconds = addLeadingZero(
+//     Math.floor((((ms % day) % hour) % minute) / second)
+//   );
 
-  return { days, hours, minutes, seconds };
-}
+//   return { days, hours, minutes, seconds };
+// }
 
 startBtn.addEventListener('click', () => {
   timer.start();
