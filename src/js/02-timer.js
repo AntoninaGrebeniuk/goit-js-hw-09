@@ -10,6 +10,7 @@ const dataMinutes = document.querySelector('[data-minutes]');
 const DataSeconds = document.querySelector('[data-seconds]');
 
 startBtn.setAttribute('disabled', true);
+let endTime = null;
 
 const options = {
   enableTime: true,
@@ -87,7 +88,7 @@ const timer = {
   start() {
     let intervalId = setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = endTime - currentTime;
+      let deltaTime = endTime - currentTime;
 
       if (deltaTime >= 0) {
         const time = convertMs(deltaTime);
