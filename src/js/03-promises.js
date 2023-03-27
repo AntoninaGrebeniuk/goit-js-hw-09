@@ -26,7 +26,7 @@ function onFormSubmit(evt) {
   let delayTime = Number(delay.value);
 
   for (let i = 1; i <= amount.value; i++) {
-    let id = i * 1;
+    let id = i;
 
     createPromise(id, delayTime)
       .then(({ position, delay }) => {
