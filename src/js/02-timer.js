@@ -2,7 +2,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
 
-// const input = document.querySelector('#datetime-picker');
+const input = document.querySelector('#datetime-picker');
 const startBtn = document.querySelector('[data-start]');
 const dataDays = document.querySelector('[data-days]');
 const dataHours = document.querySelector('[data-hours]');
